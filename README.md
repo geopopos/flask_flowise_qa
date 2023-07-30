@@ -5,7 +5,7 @@ This is a simple Flask app that demonstrates how to upload files and display the
 ## Installation
 
 1. Clone the repository:
-`git clone `
+`git clone git@github.com:geopopos/flask_flowise_qa.git`
 
 2. Install the dependencies:
 `pip install -r requirements.txt`
