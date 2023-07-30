@@ -34,6 +34,8 @@ def index():
     session.permanent = True  # Make the session permanent
     if 'uploaded_file' in session:
         uploaded_file = session['uploaded_file']
+    else:
+        uploaded_file = ""
     return render_template('index.html', uploaded_file=uploaded_file)
 
 @app.route('/uploads/<filename>')
