@@ -1,6 +1,6 @@
 # Flask File Upload Example
 
-This is a simple Flask app that demonstrates how to upload files and display them in a table.
+This is a simple Flask app that demonstrates how to allow users to upload their own text files to a flowise flow and query their own files.
 
 ## Installation
 
