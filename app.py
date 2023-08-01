@@ -11,7 +11,7 @@ import json
 load_dotenv()
 
 UPLOAD_FOLDER = 'uploads'
-ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
+ALLOWED_EXTENSIONS = {'txt'}
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -60,9 +60,9 @@ def send_message():
     headers = {
         'Content-Type': 'application/json',
     }
-    if 'uploaded_file' in session:
-        API_URL = os.getenv('FLOWISE_API_URL')
 
+    API_URL = os.getenv('FLOWISE_API_URL')
+    if 'uploaded_file' in session:
         # use form data to upload files
         form_data = {
             "files": (session['uploaded_file'], open(session['uploaded_file'], 'rb')),
@@ -74,7 +74,6 @@ def send_message():
 
         response = requests.post(API_URL, files=form_data, data=body_data)
     else:
-        breakpoint()
         response = requests.post(API_URL, headers=headers, json=request_body)
 
     return jsonify(response.json())
