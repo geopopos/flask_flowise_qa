@@ -83,6 +83,20 @@
     .upload-form button {
       margin-top: 10px;
     }
+
+    .video-container {
+      position: relative;
+      padding-bottom: 56.25%;
+      height: 0;
+    }
+
+    .video-container iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
   </style>
 </head>
 <body>
@@ -117,7 +131,14 @@
       </table>
     </div>
 
-    <div style="position: relative; padding-bottom: 56.25%; height: 0;"><iframe src="https://www.loom.com/embed/8ec13502937f4031b01890bc5e7ffc21?sid=3313f727-c65d-4766-8398-e09c74a5a22e" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"></iframe></div>
+    <hr>
+
+    <div class="video-container" style="max-width: 600px; margin: 0 auto;">
+      <h2>Quick Walkthrough Video</h2>
+      <div style="position: relative; padding-bottom: 56.25%; height: 0;">
+        <iframe src="https://www.loom.com/embed/8ec13502937f4031b01890bc5e7ffc21?sid=3313f727-c65d-4766-8398-e09c74a5a22e" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"></iframe>
+      </div>
+    </div>
     <script>
       let uuid;
 
