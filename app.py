@@ -1,15 +1,30 @@
-import os
-from flask import Flask, request, redirect, url_for, render_template, session, jsonify
+from flask import Flask, render_template, request, jsonify, session, send_from_directory
+from flask_session import Session
 from werkzeug.utils import secure_filename
+from requests_toolbelt.multipart.encoder import MultipartEncoder
+from dotenv import load_dotenv
+import requests
+import uuid
+import os
+import json
+
+load_dotenv()
+
+UPLOAD_FOLDER = 'uploads'
+ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
 
 app = Flask(__name__)
-app.secret_key = 'mysecretkey'
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+app.config['SECRET_KEY'] = 'a_random_string'
+app.config['SESSION_TYPE'] = 'filesystem'  # You can choose others like 'redis', but for simplicity, we'll use 'filesystem'
 app.config['UPLOAD_FOLDER'] = 'uploads'
-app.config['ALLOWED_EXTENSIONS'] = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
+
+Session(app)
 
 def allowed_file(filename):
-    return '.' in filename and \
-           filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
 
 @app.route('/')
 def index():
@@ -31,22 +46,59 @@ def uploaded_file(filename):
 def get_uuid():
     return jsonify({"uuid": session['uuid']})
 
+@app.route('/send_message', methods=['POST'])
+def send_message():
+    data = request.json
+    question = data['question']
+
+    request_body = {
+        'question': question,
+        'overrideConfig': {
+            'sessionId': data['uuid']
+        }
+    }
+    headers = {
+        'Content-Type': 'application/json',
+    }
+    if 'uploaded_file' in session:
+        API_URL = os.getenv('FLOWISE_API_URL')
+
+        # use form data to upload files
+        form_data = {
+            "files": (session['uploaded_file'], open(session['uploaded_file'], 'rb')),
+        }
+
+        body_data = {
+            "question": question
+        }
+
+        response = requests.post(API_URL, files=form_data, data=body_data)
+    else:
+        breakpoint()
+        response = requests.post(API_URL, headers=headers, json=request_body)
+
+    return jsonify(response.json())
+
+
 @app.route('/upload', methods=['POST'])
 def upload_file():
-    # Check if the POST request has the file part
     if 'file' not in request.files:
-        return redirect(request.url)
+        return jsonify({"error": "No file part"}), 400
     file = request.files['file']
-    # If the user does not select a file, the browser submits an empty file
     if file.filename == '':
-        return redirect(request.url)
+        return jsonify({"error": "No selected file"}), 400
     if file and allowed_file(file.filename):
         filename = secure_filename(file.filename)
         filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-        # Create the uploads directory if it does not exist
         os.makedirs(os.path.dirname(filepath), exist_ok=True)
         file.save(filepath)
-        session['uploaded_file'] = filename
-        return redirect(url_for('index'))
+        
+        # Store the filepath in the user's session data
+        session['uploaded_file'] = filepath
+        
+        return jsonify({"message": "File uploaded successfully"}), 200
     else:
-        return redirect(request.url)
+        return jsonify({"error": "File type not allowed"}), 400
+
+if __name__ == "__main__":
+    app.run(debug=True, port=5001)
