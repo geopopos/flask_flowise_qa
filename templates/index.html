@@ -192,25 +192,24 @@
         }
 
         async function sendMessageToServer(question) {
-    const requestBody = {
-        question: question,
-        uuid: uuid
-    };
-    if (qafile != null) {
-        requestBody['qafile'] = qafile; // Note: This needs further refinement. Uploading files via AJAX requires more setup.
-    }
-    
-    const response = await fetch("/send_message", {
-        method: "POST",
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(requestBody)
-    });
+          const requestBody = {
+              question: question,
+              uuid: uuid
+          };
+          if (qafile != null) {
+              requestBody['qafile'] = qafile; // Note: This needs further refinement. Uploading files via AJAX requires more setup.
+          }
+          
+          const response = await fetch("/send_message", {
+              method: "POST",
+              headers: {
+                  'Content-Type': 'application/json'
+              },
+              body: JSON.stringify(requestBody)
+          });
 
-    return await response.json();
-}
-
+          return await response.json();
+      }
 
         function addMessage(sender, text) {
             const message = document.createElement("div");
@@ -229,6 +228,8 @@
 
             chatMessages.appendChild(message);
         }
+
+        addMessage("Bot", "Hello! I'm a bot that can answer questions about your uploaded text document. Ask me anything!");
 
         function sendMessage() {
             const question = questionInput.value;
