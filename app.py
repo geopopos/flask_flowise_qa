@@ -16,7 +16,7 @@ ALLOWED_EXTENSIONS = {'txt'}
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
-app.config['SECRET_KEY'] = 'a_random_string'
+app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
 app.config['SESSION_TYPE'] = 'filesystem'  # You can choose others like 'redis', but for simplicity, we'll use 'filesystem'
 app.config['UPLOAD_FOLDER'] = 'uploads'
 
@@ -25,6 +25,9 @@ Session(app)
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
+# @app.route('/api_url')
+# def api_url():
+#     return jsonify({"api_url": os.getenv('FLOWISE_API_URL')})
 
 @app.route('/')
 def index():

@@ -2,19 +2,37 @@
 <html>
 <head>
   <title>Chat UI</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='particles.css') }}">
   <style>
     body {
       font-family: Arial, sans-serif;
-      background-color: #f0f0f0;
+      background-color: #000000;
+      color: #f0f0f0
     }
 
+    #logo {
+        max-width: 100px; /* Adjust based on your logo's size */
+        margin-bottom: 20px;
+    }
+    header {
+    text-align: center;
+    padding: 60px 0;
+    }
+
+    header h1 {
+        font-size: 3em;
+        text-transform: uppercase;
+        letter-spacing: 4px;
+        animation: fadeIn 2s;
+    }
     .chat-container {
       max-width: 600px;
       margin: 0 auto;
       background-color: #fff;
       border-radius: 5px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
       overflow: hidden;
+      color: black;
     }
 
     .chat-header {
@@ -100,6 +118,14 @@
   </style>
 </head>
 <body>
+    <div id="particle-container">
+      <canvas id="particles"></canvas>
+    </div>
+    <header>
+        <img src="{{ url_for('static', filename='logo.png') }}" alt="Force Multiplied Logo" id="logo">
+        <h1>Force Multiplied</h1>
+        <hr>
+    </header>
     <div class="chat-container">
         <div class="chat-header">Chat UI</div>
         <div class="chat-messages" id="chat-messages"></div>
@@ -245,5 +271,6 @@
         });
         uploadButton.addEventListener("click", uploadFile);
     </script>
+    <script src="{{ url_for('static', filename='particles.js') }}"></script>
 </body>
 </html>

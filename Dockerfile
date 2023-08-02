@@ -15,7 +15,6 @@ EXPOSE 5001
 
 # Set the environment variables for Flask and the API URL
 ENV FLASK_APP=app.py
-ENV FLOWISE_API_URL=https://api.flowise.com/v1
 
 # Run the command to start the Flask app
 CMD ["flask", "run", "--host=0.0.0.0", "--port=5001"]
